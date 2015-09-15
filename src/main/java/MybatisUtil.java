@@ -103,6 +103,7 @@ public class MybatisUtil {
                     "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\" >\n" +
                     "<mapper namespace=\"cn.com.newglobe.dao.read." + clsName + "ReadDao\" >\n";
             code +=generate_resultMap_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
+            code +=generate_queryById_sql_ByTable(config, name, table_prefix, false)+"\n";
             code +=generate_queryCount_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
             code +=generate_queryList_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
             code +="</mapper>\n";
@@ -224,6 +225,28 @@ public class MybatisUtil {
         return null;
     }
 
+    public static String generate_queryById_sql_ByTable(String config, String name,String table_prefix, boolean print) {
+        try {
+            Connection con = DBUtil.openConnection(config);
+            ColumnMeta pk = queryPrimaryKeyColumnMeta(con, name);
+            String clsName = translate_className(name, table_prefix);
+            if (pk != null) {
+                String sql = "\t<select id=\"queryById\" resultMap=\""+clsName+"BaseResultMap\" parameterType=\"java.lang.Long\">\n";
+                sql += "\t\tselect * from "+name+" where "+pk.getName()+" = #{value,jdbcType=BIGINT}\n\t</select>";
+                if (print) System.out.println(sql);
+                return sql;
+            }
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            try {
+                DBUtil.closeConnection();
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        }
+        return "";
+    }
 
     public static String generate_write_sql_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
         String code = null;
