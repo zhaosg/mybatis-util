@@ -204,7 +204,7 @@ public class MybatisUtil {
             String q = metaSql + "'" + name + "'";
             List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
             String clsName = translate_className(name, table_prefix);
-            String rmap = "\t<resultMap id=\"" +  clsName.substring(0, 1).toLowerCase() + clsName.substring(1)+ "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
+            String rmap = "\t<resultMap id=\"" +  firstLowerCase(clsName)+ "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
                 String jdbcType = map.get(cloumn.getType().toUpperCase());
@@ -231,7 +231,7 @@ public class MybatisUtil {
             ColumnMeta pk = queryPrimaryKeyColumnMeta(con, name);
             String clsName = translate_className(name, table_prefix);
             if (pk != null) {
-                String sql = "\t<select id=\"queryById\" resultMap=\""+clsName+"BaseResultMap\" parameterType=\"java.lang.Long\">\n";
+                String sql = "\t<select id=\"queryById\" resultMap=\""+firstLowerCase(clsName)+"BaseResultMap\" parameterType=\"java.lang.Long\">\n";
                 sql += "\t\tselect * from "+name+" where "+pk.getName()+" = #{value,jdbcType=BIGINT}\n\t</select>";
                 if (print) System.out.println(sql);
                 return sql;
@@ -290,6 +290,10 @@ public class MybatisUtil {
             return StringUtil.replaceUnderlineAndfirstToUpper(columnName.replace(column_prefix + "_", ""), "_", "");
         }
         return StringUtil.replaceUnderlineAndfirstToUpper(columnName, "_", "");
+    }
+
+    public static String firstLowerCase(String clsName) {
+        return clsName.substring(0, 1).toLowerCase() + clsName.substring(1);
     }
 
     public static String translate_className(String name, String table_prefix) {
