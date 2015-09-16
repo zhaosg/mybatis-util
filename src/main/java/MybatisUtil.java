@@ -204,7 +204,7 @@ public class MybatisUtil {
             String q = metaSql + "'" + name + "'";
             List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
             String clsName = translate_className(name, table_prefix);
-            String rmap = "\t<resultMap id=\"" + clsName + "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
+            String rmap = "\t<resultMap id=\"" +  clsName.substring(0, 1).toLowerCase() + clsName.substring(1)+ "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
                 String jdbcType = map.get(cloumn.getType().toUpperCase());
