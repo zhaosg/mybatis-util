@@ -317,8 +317,8 @@ public class MybatisUtil {
                 if (map2.containsKey(cname))
                     continue;
                 String javaType = map1.get(cloumn.getType().toUpperCase());
-                fields += "\tpublic " + javaType + " get" + firstUpperCase(cname) + "() {\n\t\treturn " + cname + "; \n\t}\n";
-                fields += "\tpublic void set" + firstUpperCase(cname) + "(" + javaType + " " + cname + ") {\n\t\tthis." + cname + " = " + cname + "; \n\t}\n";
+                fields += "\tpublic " + javaType + " get" + firstUpperCase(cname) + "() {\n\t\treturn " + cname + "; \n\t}\n\n";
+                fields += "\tpublic void set" + firstUpperCase(cname) + "(" + javaType + " " + cname + ") {\n\t\tthis." + cname + " = " + cname + "; \n\t}\n\n";
             }
             if (print) System.out.println(fields);
             return fields;
