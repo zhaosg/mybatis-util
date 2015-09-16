@@ -25,6 +25,8 @@ public class Main {
                 if(cmd.hasOption("columnPrefix"))
                     columnPrefix= cmd.getOptionValue("columnPrefix");
                 MybatisUtil.generate_model_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
+                MybatisUtil.generate_dao_class_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
+                MybatisUtil.generate_service_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
                 MybatisUtil.generate_read_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
                 MybatisUtil.generate_write_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
             }

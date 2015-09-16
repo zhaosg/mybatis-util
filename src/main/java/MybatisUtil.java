@@ -48,7 +48,7 @@ public class MybatisUtil {
     static String metaSql = "select column_name name,data_type type,column_comment description from information_schema.columns where table_name = ";
 
     static {
-        root = "." + File.separator+"gen" + File.separator;
+        root = "." + File.separator + "gen" + File.separator;
         map = new HashMap<String, String>();
         map.put("BIGINT", "BIGINT");
         map.put("VARCHAR", "VARCHAR");
@@ -70,24 +70,147 @@ public class MybatisUtil {
         map1.put("DATETIME", "java.util.Date");
 
         map2 = new HashMap<String, String>();
-        map2.put("creator","creator");
-        map2.put("createTime","createTime");
-        map2.put("updator","creator");
-        map2.put("updateTime","createTime");
-        map2.put("status","status");
-        map2.put("ext1","ext1");
-        map2.put("ext2","ext2");
-        map2.put("ext3","ext2");
+        map2.put("creator", "creator");
+        map2.put("createTime", "createTime");
+        map2.put("updator", "creator");
+        map2.put("updateTime", "createTime");
+        map2.put("status", "status");
+        map2.put("ext1", "ext1");
+        map2.put("ext2", "ext2");
+        map2.put("ext3", "ext2");
     }
 
     public static void clear() {
         try {
             File file = new File(root);
-            if(file.exists())
+            if (file.exists())
                 FileUtils.deleteDirectory(file);
         } catch (Exception e) {
             logger.error("", e);
         }
+    }
+
+    public static String generate_dao_class_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
+        String code = null;
+        String code1 = null;
+        try {
+            code = "";
+            code1 = "";
+            String clsName = translate_className(name, table_prefix);
+            code += "package cn.com.newglobe.dao.read;\n";
+            code += "import cn.com.newglobe.db.mybatis.MyBatisRepository;\n";
+            code += "import cn.com.newglobe.model." + clsName + ";\n";
+            code += "@MyBatisRepository\n";
+            code += "public interface " + clsName + "ReadDao extends ReadDao<" + clsName + ">{}\n";
+            code1 += "package cn.com.newglobe.dao.write;\n";
+            code1 += "import cn.com.newglobe.db.mybatis.MyBatisRepository;\n";
+            code1 += "import cn.com.newglobe.model." + clsName + ";\n";
+            code1 += "@MyBatisRepository\n";
+            code1 += "public interface " + clsName + "WriteDao extends WriteDao<" + clsName + "> {}\n";
+            if (print) System.out.println(code);
+            if (print) System.out.println(code1);
+            File file = new File(root + "dao" + File.separator + "read" + File.separator + clsName + "ReadDao.java");
+            FileUtils.writeStringToFile(file, code);
+            File file1 = new File(root + "dao" + File.separator + "write" + File.separator + clsName + "WriteDao.java");
+            FileUtils.writeStringToFile(file1, code1);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return code;
+    }
+
+    public static String generate_service_class_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
+        String code = null;
+        try {
+            code = "";
+            String clsName = translate_className(name, table_prefix);
+            String firstLowerName = firstLowerCase(clsName);
+            code += "package cn.com.newglobe.service;\n";
+            code += "import cn.com.newglobe.dao.read." + clsName + "ReadDao;\n";
+            code += "import cn.com.newglobe.dao.write." + clsName + "WriteDao;\n";
+            code += "import cn.com.newglobe.model." + clsName + ";\n";
+            code += "import cn.com.newglobe.model.vo.PagingDataResult;\n";
+            code += "import org.javasimon.aop.Monitored;\n";
+            code += "import org.springframework.beans.factory.annotation.Autowired;\n";
+            code += "import org.springframework.stereotype.Component;\n";
+            code += "import org.springframework.transaction.annotation.Transactional;\n";
+            code += "import java.util.Date;\n";
+            code += "import java.util.List;\n";
+            code += "@Component\n";
+            code += "@Monitored\n";
+            code += "public class " + clsName + "Service {\n";
+            code += "    @Autowired\n";
+            code += "    private " + clsName + "ReadDao " + firstLowerName + "ReadDao;\n";
+            code += "    @Autowired\n";
+            code += "    private " + clsName + "WriteDao " + firstLowerName + "WriteDao;\n";
+            code += "    public " + clsName + " queryById(Long id) {\n";
+            code += "        return " + firstLowerName + "ReadDao.queryById(id);\n";
+            code += "    }\n";
+            code += "    public List<" + clsName + "> queryByPage(" + clsName + " " + firstLowerName + ", Integer page, Integer size) {\n";
+            code += "        if (" + firstLowerCase(clsName) + " == null) {\n";
+            code += "            " + firstLowerName + " = new " + clsName + "();\n";
+            code += "        }\n";
+            code += "        " + firstLowerName + ".setStartRow(page);\n";
+            code += "        " + firstLowerName + ".setPageSize(size);\n";
+            code += "        return " + firstLowerName + "ReadDao.queryList(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    public List<" + clsName + "> queryList(" + clsName + " " + firstLowerName + ") {\n";
+            code += "        return " + firstLowerName + "ReadDao.queryList(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    public Integer queryCount(" + clsName + " " + firstLowerName + ") {\n";
+            code += "        return " + firstLowerName + "ReadDao.queryCount(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    public PagingDataResult<" + clsName + "> search(" + clsName + " " + firstLowerName + ",\n";
+            code += "                                          int page,\n";
+            code += "                                          int size) {\n";
+            code += "        PagingDataResult<" + clsName + "> result = new PagingDataResult<" + clsName + ">();\n";
+            code += "        if (page == 0)\n";
+            code += "            page = 1;\n";
+            code += "        int first = (page - 1) * size;\n";
+            code += "        " + firstLowerName + ".setStartRow(first);\n";
+            code += "        " + firstLowerName + ".setPageSize(size);\n";
+            code += "        int totalRows;\n";
+            code += "        totalRows = queryCount(" + firstLowerName + ");\n";
+            code += "        List<" + clsName + "> " + firstLowerName + "s = queryList(" + firstLowerName + ");\n";
+            code += "        result.setData(" + firstLowerName + "s);\n";
+            code += "        result.setSuccess(true);\n";
+            code += "        result.setTotal(totalRows);\n";
+            code += "        result.setCount((int) Math.ceil(totalRows * 1.0 / size));\n";
+            code += "        result.setPage(page);\n";
+            code += "        result.setSize(size);\n";
+            code += "        result.setStart(first + 1);\n";
+            code += "        result.setEnd(first + " + firstLowerName + "s.size());\n";
+            code += "        return result;\n";
+            code += "    }\n";
+            code += "    // write\n";
+            code += "    @Transactional(value = \"common\", rollbackFor = Exception.class)\n";
+            code += "    public void deleteById(Long id) throws Exception {\n";
+            code += "        " + firstLowerName + "WriteDao.deleteById(id);\n";
+            code += "    }\n";
+            code += "    @Transactional(value = \"common\", rollbackFor = Exception.class)\n";
+            code += "    public void deleteSelective(" + clsName + " " + firstLowerName + ") throws Exception {\n";
+            code += "        " + firstLowerName + "WriteDao.deleteSelective(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    @Transactional(value = \"common\", rollbackFor = Exception.class)\n";
+            code += "    public void insert(" + clsName + " " + firstLowerName + ") throws Exception {\n";
+            code += "        " + firstLowerName + "WriteDao.insert(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    @Transactional(value = \"common\", rollbackFor = Exception.class)\n";
+            code += "    public void insertSelective(" + clsName + " " + firstLowerName + ") throws Exception {\n";
+            code += "        " + firstLowerName + "WriteDao.insertSelective(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "    @Transactional(value = \"common\", rollbackFor = Exception.class)\n";
+            code += "    public void updateSelective(" + clsName + " " + firstLowerName + ") throws Exception {\n";
+            code += "        " + firstLowerName + "WriteDao.updateSelective(" + firstLowerName + ");\n";
+            code += "    }\n";
+            code += "}\n";
+            if (print) System.out.println(code);
+            File file = new File(root + "service" + File.separator + clsName + "Service.java");
+            FileUtils.writeStringToFile(file, code);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return code;
     }
 
     public static String generate_model_class_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
@@ -95,12 +218,12 @@ public class MybatisUtil {
         try {
             code = "package com.newglobe.model;\n";
             String clsName = translate_className(name, table_prefix);
-            code += "public class "+clsName+" extends BaseModel{\n";
+            code += "public class " + clsName + " extends BaseModel{\n";
             code += generate_fields_sql_ByTable(config, name, column_prefix, false);
             code += generate_get_set_ByTable(config, name, column_prefix, false);
             code += "}";
             if (print) System.out.println(code);
-            File file = new File(root + clsName + ".java");
+            File file = new File(root +"model"+File.separator+ clsName + ".java");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
@@ -115,13 +238,13 @@ public class MybatisUtil {
             code = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                     "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\" >\n" +
                     "<mapper namespace=\"cn.com.newglobe.dao.read." + clsName + "ReadDao\" >\n";
-            code +=generate_resultMap_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code +=generate_queryById_sql_ByTable(config, name, table_prefix, false)+"\n";
-            code +=generate_queryCount_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code +=generate_queryList_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code +="</mapper>\n";
+            code += generate_resultMap_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += generate_queryById_sql_ByTable(config, name, table_prefix, false) + "\n";
+            code += generate_queryCount_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += generate_queryList_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += "</mapper>\n";
             if (print) System.out.println(code);
-            File file = new File(root + "read" + File.separator + clsName + "Mapper.xml");
+            File file = new File(root + "mybatis" + File.separator +"read" + File.separator+ clsName + "Mapper.xml");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
@@ -135,7 +258,7 @@ public class MybatisUtil {
             String q = metaSql + "'" + name + "'";
             List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
             String clsName = translate_className(name, table_prefix);
-            String sql = "\t<select id=\"queryList\" parameterType=\"cn.com.newglobe.model." + clsName + "\" resultMap=\""+firstLowerCase(clsName)+"BaseResultMap\">\n";
+            String sql = "\t<select id=\"queryList\" parameterType=\"cn.com.newglobe.model." + clsName + "\" resultMap=\"" + firstLowerCase(clsName) + "BaseResultMap\">\n";
             sql += "\t\tselect * from " + name + " where 1=1\n\t\t<trim>\n";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
@@ -165,7 +288,7 @@ public class MybatisUtil {
             String fields = "";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
-                if(map2.containsKey(cname))
+                if (map2.containsKey(cname))
                     continue;
                 fields += "\tprivate " + map1.get(cloumn.getType().toUpperCase()) + " " + cname + ";\n";
             }
@@ -191,11 +314,11 @@ public class MybatisUtil {
             String fields = "";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
-                if(map2.containsKey(cname))
+                if (map2.containsKey(cname))
                     continue;
                 String javaType = map1.get(cloumn.getType().toUpperCase());
-                fields += "\tpublic "+javaType+" get"+firstUpperCase(cname)+"() {\n\t\treturn "+cname+"; \n\t}\n";
-                fields += "\tpublic void set"+firstUpperCase(cname)+"("+javaType+" "+cname+") {\n\t\tthis."+cname+" = "+cname+"; \n\t}\n";
+                fields += "\tpublic " + javaType + " get" + firstUpperCase(cname) + "() {\n\t\treturn " + cname + "; \n\t}\n";
+                fields += "\tpublic void set" + firstUpperCase(cname) + "(" + javaType + " " + cname + ") {\n\t\tthis." + cname + " = " + cname + "; \n\t}\n";
             }
             if (print) System.out.println(fields);
             return fields;
@@ -245,7 +368,7 @@ public class MybatisUtil {
             String q = metaSql + "'" + name + "'";
             List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
             String clsName = translate_className(name, table_prefix);
-            String rmap = "\t<resultMap id=\"" +  firstLowerCase(clsName)+ "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
+            String rmap = "\t<resultMap id=\"" + firstLowerCase(clsName) + "BaseResultMap\" type=\"cn.com.newglobe.model." + clsName + "\" >\n";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
                 String jdbcType = map.get(cloumn.getType().toUpperCase());
@@ -266,14 +389,14 @@ public class MybatisUtil {
         return null;
     }
 
-    public static String generate_queryById_sql_ByTable(String config, String name,String table_prefix, boolean print) {
+    public static String generate_queryById_sql_ByTable(String config, String name, String table_prefix, boolean print) {
         try {
             Connection con = DBUtil.openConnection(config);
             ColumnMeta pk = queryPrimaryKeyColumnMeta(con, name);
             String clsName = translate_className(name, table_prefix);
             if (pk != null) {
-                String sql = "\t<select id=\"queryById\" resultMap=\""+firstLowerCase(clsName)+"BaseResultMap\" parameterType=\"java.lang.Long\">\n";
-                sql += "\t\tselect * from "+name+" where "+pk.getName()+" = #{value,jdbcType=BIGINT}\n\t</select>";
+                String sql = "\t<select id=\"queryById\" resultMap=\"" + firstLowerCase(clsName) + "BaseResultMap\" parameterType=\"java.lang.Long\">\n";
+                sql += "\t\tselect * from " + name + " where " + pk.getName() + " = #{value,jdbcType=BIGINT}\n\t</select>";
                 if (print) System.out.println(sql);
                 return sql;
             }
@@ -297,14 +420,14 @@ public class MybatisUtil {
                     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                             "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\" >\n" +
                             "<mapper namespace=\"cn.com.newglobe.dao.write." + clsName + "WriteDao\">\n";
-            code += generate_deleteById_sql_ByTable(config, name, false)+"\n";
-            code += generate_deleteSelective_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code += generate_insert_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code += generate_insertSelective_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code += generate_updateSelective_sql_ByTable(config, name, table_prefix, column_prefix, false)+"\n";
-            code += "</mapper>"+"\n";
+            code += generate_deleteById_sql_ByTable(config, name, false) + "\n";
+            code += generate_deleteSelective_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += generate_insert_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += generate_insertSelective_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += generate_updateSelective_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
+            code += "</mapper>" + "\n";
             if (print) System.out.println(code);
-            File file = new File(root + "write" + File.separator + clsName + "Mapper.xml");
+            File file = new File(root + "mybatis" + File.separator +"write" + File.separator + clsName + "Mapper.xml");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
