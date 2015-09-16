@@ -78,7 +78,7 @@ public class MybatisUtil {
         map.put("LONGVARBINARY","LONGVARBINARY");
         map.put("DATE","DATE");
         map.put("TIME","TIME");
-        map.put("DATETIME","DATETIME");
+        map.put("DATETIME","TIMESTAMP");
         map.put("TIMESTAMP","TIMESTAMP");
         map.put("CLOB","CLOB");
         map.put("BLOB","BLOB");
