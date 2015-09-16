@@ -13,16 +13,21 @@ public class Main {
             options.addOption("tableName", true, "表名");
             options.addOption("tablePrefix", true, "表前缀");
             options.addOption("columnPrefix", true, "列前缀");
+            options.addOption("clear", false, "删除");
             CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(options, args);
-            String tableName = cmd.getOptionValue("tableName");
-            String tablePrefix = cmd.getOptionValue("tablePrefix");
-            String columnPrefix = null;
-            if(cmd.hasOption("columnPrefix"))
-                columnPrefix= cmd.getOptionValue("columnPrefix");
-            MybatisUtil.generate_model_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
-            MybatisUtil.generate_read_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
-            MybatisUtil.generate_write_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
+            if(cmd.hasOption("clear"))
+                MybatisUtil.clear();
+            else{
+                String tableName = cmd.getOptionValue("tableName");
+                String tablePrefix = cmd.getOptionValue("tablePrefix");
+                String columnPrefix = null;
+                if(cmd.hasOption("columnPrefix"))
+                    columnPrefix= cmd.getOptionValue("columnPrefix");
+                MybatisUtil.generate_model_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
+                MybatisUtil.generate_read_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
+                MybatisUtil.generate_write_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
+            }
         } catch (Exception e) {
             logger.error("", e);
         }

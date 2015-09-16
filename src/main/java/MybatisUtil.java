@@ -56,6 +56,7 @@ public class MybatisUtil {
         map.put("INT", "INTEGER");
         map.put("LONGTEXT", "LONGVARCHAR");
         map.put("TINYINT", "INTEGER");
+        map.put("SMALLINT", "INTEGER");
         map.put("DATETIME", "TIMESTAMP");
 
         map1 = new HashMap<String, String>();
@@ -63,6 +64,7 @@ public class MybatisUtil {
         map1.put("VARCHAR", "String");
         map1.put("DECIMAL", "java.math.BigDecimal");
         map1.put("INT", "Integer");
+        map1.put("SMALLINT", "Integer");
         map1.put("LONGTEXT", "String");
         map1.put("TINYINT", "Integer");
         map1.put("DATETIME", "java.util.Date");
@@ -78,6 +80,16 @@ public class MybatisUtil {
         map2.put("ext3","ext2");
     }
 
+    public static void clear() {
+        try {
+            File file = new File(root);
+            if(file.exists())
+                FileUtils.deleteDirectory(file);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+    }
+
     public static String generate_model_class_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
         String code = null;
         try {
@@ -85,6 +97,7 @@ public class MybatisUtil {
             String clsName = translate_className(name, table_prefix);
             code += "public class "+clsName+" extends BaseModel{\n";
             code += generate_fields_sql_ByTable(config, name, column_prefix, false);
+            code += generate_get_set_ByTable(config, name, column_prefix, false);
             code += "}";
             if (print) System.out.println(code);
             File file = new File(root + clsName + ".java");
@@ -122,7 +135,7 @@ public class MybatisUtil {
             String q = metaSql + "'" + name + "'";
             List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
             String clsName = translate_className(name, table_prefix);
-            String sql = "\t<select id=\"queryList\" parameterType=\"cn.com.newglobe.model." + clsName + "\" resultMap=\""+clsName+"BaseResultMap\">\n";
+            String sql = "\t<select id=\"queryList\" parameterType=\"cn.com.newglobe.model." + clsName + "\" resultMap=\""+firstLowerCase(clsName)+"BaseResultMap\">\n";
             sql += "\t\tselect * from " + name + " where 1=1\n\t\t<trim>\n";
             for (ColumnMeta cloumn : metas) {
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
@@ -155,6 +168,34 @@ public class MybatisUtil {
                 if(map2.containsKey(cname))
                     continue;
                 fields += "\tprivate " + map1.get(cloumn.getType().toUpperCase()) + " " + cname + ";\n";
+            }
+            if (print) System.out.println(fields);
+            return fields;
+        } catch (Exception e) {
+            logger.error("", e);
+        } finally {
+            try {
+                DBUtil.closeConnection();
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        }
+        return null;
+    }
+
+    public static String generate_get_set_ByTable(String config, String name, String column_prefix, boolean print) {
+        try {
+            Connection con = DBUtil.openConnection(config);
+            String q = metaSql + "'" + name + "'";
+            List<ColumnMeta> metas = DBUtil.queryBeanList(con, q, ColumnMeta.class);
+            String fields = "";
+            for (ColumnMeta cloumn : metas) {
+                String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
+                if(map2.containsKey(cname))
+                    continue;
+                String javaType = map1.get(cloumn.getType().toUpperCase());
+                fields += "\tpublic "+javaType+" get"+firstUpperCase(cname)+"() {\n\t\treturn "+cname+"; \n\t}\n";
+                fields += "\tpublic void set"+firstUpperCase(cname)+"("+javaType+" "+cname+") {\n\t\tthis."+cname+" = "+cname+"; \n\t}\n";
             }
             if (print) System.out.println(fields);
             return fields;
@@ -296,10 +337,14 @@ public class MybatisUtil {
         return clsName.substring(0, 1).toLowerCase() + clsName.substring(1);
     }
 
+    public static String firstUpperCase(String clsName) {
+        return clsName.substring(0, 1).toUpperCase() + clsName.substring(1);
+    }
+
     public static String translate_className(String name, String table_prefix) {
         String clsName = "";
         if (StringUtils.isNotEmpty(table_prefix)) {
-            clsName = name.replace(table_prefix, "");
+            clsName = name.replaceFirst(table_prefix, "");
         }
         clsName = StringUtil.replaceUnderlineAndfirstToUpper(clsName, "_", "");
         return clsName;
