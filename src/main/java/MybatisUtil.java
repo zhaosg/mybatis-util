@@ -638,12 +638,15 @@ public class MybatisUtil {
             String sql1 =
                     "\t<update id=\"updateSelective\" parameterType=\"cn.com.newglobe.model." + clsName + "\">\n" +
                             "\t\tupdate " + name + "\n\t\t<set>\n";
+            ColumnMeta pk = queryPrimaryKeyColumnMeta(con, name);
             for (ColumnMeta cloumn : metas) {
+                if(pk.getName().equals(cloumn.getName()))
+                    continue;
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
                 String jdbcType = map.get(cloumn.getType().toUpperCase());
                 sql1 += "\t\t\t<if test=\"" + cname + " != null\">  " + cloumn.getName() + " = #{" + cname + ",jdbcType=" + jdbcType + "}, </if>\n";
             }
-            sql1 += "\t\t</set>\n\t</update>";
+            sql1 += "\t\t</set>\n\t\twhere " + pk.getName() + " = #{value,jdbcType=BIGINT}\n\t</update>";
             if (print) System.out.println(sql1);
             return sql1;
         } catch (Exception e) {

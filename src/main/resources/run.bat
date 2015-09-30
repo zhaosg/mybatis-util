@@ -1,4 +1,6 @@
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -clear
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_brand -tablePrefix t
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_category -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_common -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_attribute -tablePrefix t
@@ -8,3 +10,5 @@ java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_evaluate -tablePre
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_images -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_tag -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_type -tablePrefix t
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_tag -tablePrefix t
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_type_brand -tablePrefix t
