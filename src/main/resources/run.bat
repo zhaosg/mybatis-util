@@ -12,3 +12,5 @@ java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_tag -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_type -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_tag -tablePrefix t
 java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_type_brand -tablePrefix t
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_region -tablePrefix t
+java -jar mybatis-util-0.0.1-SNAPSHOT.jar  -tableName t_goods_spec -tablePrefix t
