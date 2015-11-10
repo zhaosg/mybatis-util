@@ -51,70 +51,70 @@ public class MybatisUtil {
         root = "." + File.separator + "gen" + File.separator;
         map = new HashMap<String, String>();
 
-        map.put("CHAR","CHAR");
-        map.put("VARCHAR","VARCHAR");
-        map.put("LONGVARCHAR","LONGVARCHAR");
+        map.put("CHAR", "CHAR");
+        map.put("VARCHAR", "VARCHAR");
+        map.put("LONGVARCHAR", "LONGVARCHAR");
         map.put("VARCHAR", "VARCHAR");
         map.put("NVARCHAR", "NVARCHAR");
         map.put("TEXT", "LONGVARCHAR");
         map.put("TINYTEXT", "LONGVARCHAR");
         map.put("LONGTEXT", "LONGVARCHAR");
         map.put("MEDIUMTEXT", "LONGVARCHAR");
-        map.put("NUMERIC","NUMERIC");
-        map.put("DECIMAL","DECIMAL");
-        map.put("REAL","REAL");
-        map.put("FLOAT","FLOAT");
-        map.put("DOUBLE","DOUBLE");
-        map.put("BIT"," BIT");
-        map.put("BOOLEAN","BOOLEAN");
-        map.put("TINYINT","INTEGER");
-        map.put("SMALLINT","INTEGER");
-        map.put("INTEGER","INTEGER");
+        map.put("NUMERIC", "NUMERIC");
+        map.put("DECIMAL", "DECIMAL");
+        map.put("REAL", "REAL");
+        map.put("FLOAT", "FLOAT");
+        map.put("DOUBLE", "DOUBLE");
+        map.put("BIT", " BIT");
+        map.put("BOOLEAN", "BOOLEAN");
+        map.put("TINYINT", "INTEGER");
+        map.put("SMALLINT", "INTEGER");
+        map.put("INTEGER", "INTEGER");
         map.put("INT", "INTEGER");
         map.put("MEDIUMINT", "INTEGER");
-        map.put("BIGINT","BIGINT");
-        map.put("BINARY","BINARY");
-        map.put("VARBINARY","VARBINARY");
-        map.put("LONGVARBINARY","LONGVARBINARY");
-        map.put("DATE","DATE");
-        map.put("TIME","TIME");
-        map.put("DATETIME","TIMESTAMP");
-        map.put("TIMESTAMP","TIMESTAMP");
-        map.put("CLOB","CLOB");
-        map.put("BLOB","BLOB");
+        map.put("BIGINT", "BIGINT");
+        map.put("BINARY", "BINARY");
+        map.put("VARBINARY", "VARBINARY");
+        map.put("LONGVARBINARY", "LONGVARBINARY");
+        map.put("DATE", "DATE");
+        map.put("TIME", "TIME");
+        map.put("DATETIME", "TIMESTAMP");
+        map.put("TIMESTAMP", "TIMESTAMP");
+        map.put("CLOB", "CLOB");
+        map.put("BLOB", "BLOB");
 
         map1 = new HashMap<String, String>();
-        map1.put("CHAR","String");
-        map1.put("VARCHAR","String");
-        map1.put("NVARCHAR","String");
-        map1.put("LONGVARCHAR","String");
+        map1.put("CHAR", "String");
+        map1.put("VARCHAR", "String");
+        map1.put("NVARCHAR", "String");
+        map1.put("LONGVARCHAR", "String");
         map1.put("VARCHAR", "String");
         map1.put("TEXT", "String");
         map1.put("TINYTEXT", "String");
         map1.put("LONGTEXT", "String");
         map1.put("MEDIUMTEXT", "String");
-        map1.put("NUMERIC","java.math.BigDecimal");
-        map1.put("DECIMAL","java.math.BigDecimal");
-        map1.put("REAL","Float");
-        map1.put("FLOAT","Double");
-        map1.put("DOUBLE","Double");
-        map1.put("BIT"," Integer");
-        map1.put("BOOLEAN","Boolean");
-        map1.put("TINYINT","Integer");
-        map1.put("SMALLINT","Integer");
-        map1.put("INTEGER","Integer");
+        map1.put("NUMERIC", "java.math.BigDecimal");
+        map1.put("DECIMAL", "java.math.BigDecimal");
+        map1.put("REAL", "Float");
+        map1.put("FLOAT", "Double");
+        map1.put("DOUBLE", "Double");
+        map1.put("BIT", " Integer");
+        map1.put("BOOLEAN", "Boolean");
+        map1.put("TINYINT", "Integer");
+        map1.put("SMALLINT", "Integer");
+        map1.put("INTEGER", "Integer");
         map1.put("INT", "Integer");
         map1.put("MEDIUMINT", "Integer");
-        map1.put("BIGINT","Long");
-        map1.put("BINARY","Byte[]");
-        map1.put("VARBINARY","Byte[]");
-        map1.put("LONGVARBINARY","Byte[]");
-        map1.put("DATE","java.util.Date");
-        map1.put("TIME","java.util.Date");
-        map1.put("DATETIME","java.util.Date");
-        map1.put("TIMESTAMP","java.util.Date");
-        map1.put("CLOB","java.sql.Clob");
-        map1.put("BLOB","java.sql.Blob");
+        map1.put("BIGINT", "Long");
+        map1.put("BINARY", "Byte[]");
+        map1.put("VARBINARY", "Byte[]");
+        map1.put("LONGVARBINARY", "Byte[]");
+        map1.put("DATE", "java.util.Date");
+        map1.put("TIME", "java.util.Date");
+        map1.put("DATETIME", "java.util.Date");
+        map1.put("TIMESTAMP", "java.util.Date");
+        map1.put("CLOB", "java.sql.Clob");
+        map1.put("BLOB", "java.sql.Blob");
 
         map2 = new HashMap<String, String>();
         map2.put("creator", "creator");
@@ -270,7 +270,7 @@ public class MybatisUtil {
             code += generate_get_set_ByTable(config, name, column_prefix, false);
             code += "}";
             if (print) System.out.println(code);
-            File file = new File(root +"model"+File.separator+ clsName + ".java");
+            File file = new File(root + "model" + File.separator + clsName + ".java");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
@@ -291,7 +291,7 @@ public class MybatisUtil {
             code += generate_queryList_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
             code += "</mapper>\n";
             if (print) System.out.println(code);
-            File file = new File(root + "mybatis" + File.separator +"read" + File.separator+ clsName + "Mapper.xml");
+            File file = new File(root + "mybatis" + File.separator + "read" + File.separator + clsName + "Mapper.xml");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
@@ -474,7 +474,7 @@ public class MybatisUtil {
             code += generate_updateSelective_sql_ByTable(config, name, table_prefix, column_prefix, false) + "\n";
             code += "</mapper>" + "\n";
             if (print) System.out.println(code);
-            File file = new File(root + "mybatis" + File.separator +"write" + File.separator + clsName + "Mapper.xml");
+            File file = new File(root + "mybatis" + File.separator + "write" + File.separator + clsName + "Mapper.xml");
             FileUtils.writeStringToFile(file, code);
         } catch (Exception e) {
             logger.error("", e);
@@ -639,15 +639,15 @@ public class MybatisUtil {
                     "\t<update id=\"updateSelective\" parameterType=\"cn.com.newglobe.model." + clsName + "\">\n" +
                             "\t\tupdate " + name + "\n\t\t<set>\n";
             ColumnMeta pk = queryPrimaryKeyColumnMeta(con, name);
-           String pkname= translate_columnName_to_fieldName(pk.getName(), column_prefix);
+            String pkname = translate_columnName_to_fieldName(pk.getName(), column_prefix);
             for (ColumnMeta cloumn : metas) {
-                if(pk.getName().equals(cloumn.getName()))
+                if (pk.getName().equals(cloumn.getName()))
                     continue;
                 String cname = translate_columnName_to_fieldName(cloumn.getName(), column_prefix);
                 String jdbcType = map.get(cloumn.getType().toUpperCase());
                 sql1 += "\t\t\t<if test=\"" + cname + " != null\">  " + cloumn.getName() + " = #{" + cname + ",jdbcType=" + jdbcType + "}, </if>\n";
             }
-            sql1 += "\t\t</set>\n\t\twhere " + pk.getName() + " = #{"+pkname+",jdbcType=BIGINT}\n\t</update>";
+            sql1 += "\t\t</set>\n\t\twhere " + pk.getName() + " = #{" + pkname + ",jdbcType=BIGINT}\n\t</update>";
             if (print) System.out.println(sql1);
             return sql1;
         } catch (Exception e) {
