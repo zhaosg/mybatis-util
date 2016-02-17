@@ -11,6 +11,7 @@ public class Main {
         try {
             Options options = new Options();
             options.addOption("tableName", true, "表名");
+            options.addOption("tableNames", true, "表名组");
             options.addOption("tablePrefix", true, "表前缀");
             options.addOption("columnPrefix", true, "列前缀");
             options.addOption("clear", false, "删除");
@@ -24,11 +25,18 @@ public class Main {
                 String columnPrefix = null;
                 if(cmd.hasOption("columnPrefix"))
                     columnPrefix= cmd.getOptionValue("columnPrefix");
-                MybatisUtil.generate_model_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
-                MybatisUtil.generate_dao_class_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
-                MybatisUtil.generate_service_class_ByTable("/application.properties", tableName, tablePrefix, columnPrefix, false);
-                MybatisUtil.generate_read_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
-                MybatisUtil.generate_write_sql_ByTable("/application.properties",tableName, tablePrefix, columnPrefix, false);
+                String[] tableNames = null;
+                if(cmd.hasOption("tableNames"))
+                    tableNames= cmd.getOptionValue("tableNames").split(",");
+                else
+                    tableNames=new String[]{tableName};
+                for (int i = 0; i < tableNames.length; i++) {
+                    MybatisUtil.generate_model_class_ByTable("/application.properties", tableNames[i], tablePrefix, columnPrefix, false);
+                    MybatisUtil.generate_dao_class_ByTable("/application.properties",tableNames[i], tablePrefix, columnPrefix, false);
+                    MybatisUtil.generate_service_class_ByTable("/application.properties", tableNames[i], tablePrefix, columnPrefix, false);
+                    MybatisUtil.generate_read_sql_ByTable("/application.properties",tableNames[i], tablePrefix, columnPrefix, false);
+                    MybatisUtil.generate_write_sql_ByTable("/application.properties",tableNames[i], tablePrefix, columnPrefix, false);
+                }
             }
         } catch (Exception e) {
             logger.error("", e);
