@@ -263,7 +263,7 @@ public class MybatisUtil {
     public static String generate_model_class_ByTable(String config, String name, String table_prefix, String column_prefix, boolean print) {
         String code = null;
         try {
-            code = "package com.newglobe.model;\n";
+            code = "package cn.com.newglobe.model;\n";
             String clsName = translate_className(name, table_prefix);
             code += "public class " + clsName + " extends BaseModel{\n";
             code += generate_fields_sql_ByTable(config, name, column_prefix, false);
